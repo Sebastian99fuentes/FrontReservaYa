@@ -1,21 +1,63 @@
-import React ,{ useState  }from "react";
+import React ,{ useEffect, useState  }from "react";
 import './User.css';
-import { IonPage,IonHeader, IonContent, IonGrid, IonFooter, IonRippleEffect, IonItem, IonLabel, IonAvatar, IonRow, IonCol, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonButton, IonButtons, IonInput, IonModal, IonTitle, IonToolbar } from "@ionic/react";
+import { IonPage,IonContent, IonFooter, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonButton, IonButtons, IonInput, IonModal, IonTitle, IonToolbar, IonCardTitle, InputChangeEventDetail, useIonToast } from "@ionic/react";
 
 import FooterContainer from "../../components/FooterContainer/FooterContainer";
-import { isValid } from "date-fns";
-import { Link } from "react-router-dom";
 
+import { Link, useHistory } from "react-router-dom";
+import UserOso from '../../assets/img/OsoUsers.jpg';
+import axios from "axios";
+import { link } from "fs";
 
 export {};
 
+interface MyObject {
+  mail: string;
+  oldPassword: string;
+  newPassword: string;
 
+}
 const User: React.FC = () => { 
+
+
+ 
+
+
+
+  useEffect(() => {
+    const user = localStorage.getItem('usuario');
+if(user!=null){
+  setcorreo(user);
+  setusername( user.substring(0, user.indexOf('@')));
+}   
+  }, []);
+ 
 
   const [showModal, setShowModal] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
   const [isValid, setIsValid] = useState<boolean>();
 
+  const [username, setusername] = useState<string>('');
+  const [correo, setcorreo] = useState<string>('');
+  const [passwordold, setPasswordold] = useState('');
+  const [password, setPassword] = useState('');
+
+
+  const history = useHistory();
+
+  const element: HTMLElement | null = document.getElementById('myElement');
+  if (element) {
+    element.addEventListener('pointerdown', (event: PointerEvent) => {
+      // Captura el puntero cuando se hace clic en el elemento
+      element.setPointerCapture(event.pointerId);
+      history.push('/login');
+    });
+  
+    element.addEventListener('pointerup', (event: PointerEvent) => {
+      // Libera el puntero cuando se levanta el clic
+      element.releasePointerCapture(event.pointerId);
+    });
+  }
   const validateEmail = (email: string) => {
     return email.match(
       /^(?=.{1,254}$)(?=.{1,64}@)[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
@@ -24,11 +66,8 @@ const User: React.FC = () => {
 
   const validate = (ev: Event) => {
     const value = (ev.target as HTMLInputElement).value;
-
     setIsValid(undefined);
-
     if (value === '') return;
-
     validateEmail(value) !== null ? setIsValid(true) : setIsValid(false);
   };
 
@@ -37,37 +76,89 @@ const User: React.FC = () => {
   };
 
 
+  const handlePasswordChange = (event: CustomEvent<InputChangeEventDetail>) => {
+    setPassword(String(event.detail.value));
+  };
 
+  const handleConfirmPasswordChange2 = (event: CustomEvent<InputChangeEventDetail>) => {
+    setPasswordold(String(event.detail.value));
+  };
+
+  const redirectToLogin = () => {
+    history.push('/login');
+    localStorage.clear();
+  };
+
+  const [present] = useIonToast();
+
+  const presentToast = () => {
+    
+    const data: MyObject = {
+      mail: correo,
+      oldPassword: passwordold,
+     newPassword: password
+    };
+    console.log(data);
+    axios.put(`http://localhost:5002/change`, data, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      console.log('Response:', response.status);
+      if (response.status === 200) {
+        present({
+          message: 'Cambio de contraseña realizado',
+          duration: 1000,
+          position: 'middle',
+          color: "success"
+        });
+      
+      } else {
+        present({
+          message: 'Error al realizar la reserva',
+          duration: 1000,
+          position: 'middle',
+          color: "danger"
+        
+        });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      present({
+        message: 'Error en la solicitud',
+        duration: 1000,
+        position: 'middle',
+        color: "danger"
+      });
+    });
+  };
+
+ 
     return (
-      <IonPage >     
-    <IonContent >
-          <div className="wrapper" >
-        <div className="ion-activatable ripple-parent circle">
-           <img alt="Silhouette of a person's head" src="https://cdn-icons-png.flaticon.com/512/6522/6522516.png" />
-        <IonRippleEffect type="unbounded"></IonRippleEffect>
-        </div>
-        <h1>ssfuentes</h1>
-      </div>
-    </IonContent>
-          <IonContent >
+      <IonPage >   
+          
+        
+          <IonCard className={ `ion-text-center ion-justify-content-center container img-center` }>
+      <img className=" circle" alt="Si" src={UserOso} />
+      <IonCardHeader>
+        <IonCardTitle> {username}</IonCardTitle>
+        <IonCardSubtitle>Usuario</IonCardSubtitle>
+      </IonCardHeader>
+    </IonCard>
+
           <IonItem button>
-          <Link to='/MisReservas' >
-          <IonLabel>Mis Reservas</IonLabel>
-          </Link>
+          <IonLabel className="custom-buttons" onClick={redirectToLogin}>Salir</IonLabel>
            </IonItem>
-          <IonItem button>
-          <Link to='/login' >
-          <IonLabel>Salir</IonLabel>
-          </Link>
-           </IonItem>
-           <IonItem button>
-     <IonLabel>Nosotros</IonLabel>
-           </IonItem>
-           <IonItem button>
+         
+
+           {/* <IonItem button>
      <IonLabel >Ayuda</IonLabel>
-           </IonItem>
+           </IonItem> */}
            <IonItem button>
-     <IonLabel onClick={() => setShowModal(true)} >
+           {/* <IonButton className="custom-button" expand="block"   onClick={() => presentToast()}> Nueva Contraseña</IonButton> */}
+     <IonLabel  className="custom-buttons" onClick={() => setShowModal(true)}  >
       Nueva Contraseña</IonLabel>
            </IonItem>
 
@@ -82,37 +173,37 @@ const User: React.FC = () => {
     
         <div>
         <IonCardContent>
-        <p>Ingresa tu contraseña </p>
+        <p>Ingresa tu contraseña actual</p>
           <IonInput    className={`${isValid && 'ion-valid'} ${isValid === false && 'ion-invalid'} ${isTouched && 'ion-touched'}`}
-                    type="password"    
+                    type="email"    
                     label=""
                     placeholder="password"
-                    errorText="Invalid password"
-                    onIonInput={(event) => validate(event)}
-                    onIonBlur={() => markTouched()}
+                    onIonChange={handleConfirmPasswordChange2}
                    >
           </IonInput>
         </IonCardContent>
         <IonCardContent>
-        <p>Repetir contraseña </p>
-          <IonInput className={`${isValid && 'ion-valid'} ${isValid === false && 'ion-invalid'} ${isTouched && 'ion-touched'}`}
-                    type="password"    
+        <p>Ingresa tu nueva contraseña </p>
+          <IonInput    className={`${isValid && 'ion-valid'} ${isValid === false && 'ion-invalid'} ${isTouched && 'ion-touched'}`}
+                    type="email"    
                     label=""
                     placeholder="password"
-                    errorText="Invalid password"
-                    onIonInput={(event) => validate(event)}
+                    errorText="No son los mismos"
                     onIonBlur={() => markTouched()}
+                    onIonChange={handlePasswordChange}
                    >
           </IonInput>
-        </IonCardContent>  
+        </IonCardContent>
+
   
-        <IonButton className="custom-button" expand="block" >Cambiar</IonButton>
+        <IonButton  color="dark" className="custom-button" expand="block" onClick={() => presentToast()}  >Cambiar</IonButton>
           </div>
         </IonModal>
-          </IonContent>
 
 
-
+           <p className={ `ion-text-center ion-justify-content-center container img-center` }>Nosotros </p>
+           <IonLabel class="ion-text-center ion-justify-content-center  ion-align-items-center ion-flex container">
+            <p>ReservaYA! una App para reservas implementos e instalaciones deportivas</p></IonLabel>
           </IonContent>
           <IonFooter>
             <FooterContainer />

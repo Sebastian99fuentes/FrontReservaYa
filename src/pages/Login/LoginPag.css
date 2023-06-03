@@ -1,10 +1,23 @@
-.carta{
-  
-    
-    
-    /* Inside auto layout */
-    
-    flex: none;
-    order: 0;
-    flex-grow: 0;
+.cartalog{
+   
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  height: 100vh; 
+  flex: none;
+  order: 0;
+  flex-grow: 0;
 }
+/* ion-content {
+  --background: url('../../assets/Fondo2login.jpg') no-repeat center center fixed;
+  background-size: cover;
+}  */
+
+.background-image-content {
+  --background: url('../../assets/Fondo2login.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+.transparent-card {
+  background-color: transparent;
+} 
+

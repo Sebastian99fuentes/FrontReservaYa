@@ -1,0 +1,9 @@
+.midtitle{
+  --background: url('../../assets/HeaderImg.webp') no-repeat center center fixed;
+  background-size: cover;
+  } 
+
+ /* ion-content {
+  --background: url('../../assets/HeaderImg.webp') no-repeat center center fixed;
+  background-size: cover;
+}  */

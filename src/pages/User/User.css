@@ -1,27 +1,24 @@
-.wrapper {
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    text-align: center;
-    margin: 120px ;
-  }
-  
-  b {
-    width: 100%;
-  }
-  
-  .ripple-parent {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    overflow: hidden;
-    border: 1px solid #ddd;
-    user-select: none;
-  }
 
   .circle {
     width: 120px;
     height: 120px;
     border-radius: 50%;
   }
+
+ .img-center{
+padding-top: 100px;
+ } 
+ .custom-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  background-color: #c7cacd;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.custom-button:hover {
+  background-color: #d9e2ec;
+}

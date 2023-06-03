@@ -33,6 +33,7 @@ import ReservaImplementos from './pages/ReservaImplementos/ReservaImplementos';
 import MisReservas from './pages/MisReservas/MisReservas';
 import ItemsImplementos from './pages/ItemsImplementos/ItemsImplementos';
 import User from './pages/User/User';
+import HorariosItems from './components/HorariosItems/HorariosItems';
 
 setupIonicReact();
 
@@ -48,6 +49,14 @@ const App: React.FC = () => (
             <Route  path="/reservaImplementos" component={ReservaImplementos} exact/>
            <Route  path="/HorariosColiseo" component={Horarios} exact/>
            <Route  path="/HorariosCancha" component={Horarios} exact/>
+
+           <Route  path="/HorariosFutbol" component={HorariosItems} exact/>
+           <Route  path="/HorariosPinPon" component={HorariosItems} exact/>
+           <Route  path="/HorariosBasket" component={HorariosItems} exact/>
+           <Route  path="/HorariosChalecos" component={HorariosItems} exact/>
+           <Route  path="/HorariosVolley" component={HorariosItems} exact/>
+           <Route  path="/HorariosPinPon" component={HorariosItems} exact/>
+           
            <Route path="/login" component={Login} exact/>
           <Route path="/all-reservas" component={AllReservas} exact/>
 

@@ -1,4 +1,4 @@
-import {  createAnimation,
+import {  
   IonButtons,
   IonButton,
   IonModal,
@@ -13,35 +13,28 @@ import {  createAnimation,
   useIonToast, } from '@ionic/react';
 
 import React, { useState  } from 'react';
+import '../ModalRegistro/ModalRegristro.css';
 
-  
 interface Usuario {
-  Correo: string;
-  clave: string;
+  mail: string;
+  password: string;
 }
-
-
 
 const ModalRegistro: React.FC = () => {
   
- 
-  const data: Usuario = {
-    Correo:'',
-    clave: ''
-  };
-
   const [showModal, setShowModal] = useState(false);
   const [correo, setCorreo] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isTouched, setIsTouched] = useState(false);
   const [isValid, setIsValid] = useState<boolean>();
+  const [isValidPasw, setisValidPasw] = useState<boolean>(true);
  
     
   const validateEmail = (email: string) => {
     setCorreo(email);
     return email.match(
-      /^[a-zA-Z0-9._%+-]+@Puce\.edu\.ec$/
+      /^[a-zA-Z0-9._%+-]+@[pP]uce\.edu\.ec$/
     );
   };
   const validate = (ev: Event) => {
@@ -53,57 +46,68 @@ const ModalRegistro: React.FC = () => {
   const markTouched = () => {
     setIsTouched(true);
   };
-
-
-
-
+  function validarCadena(cadena: string): boolean {
+    const regex = /^(?=.*[!@#$%^&*()])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
+    return regex.test(cadena);
+  }
   const handlePasswordChange = (event: CustomEvent<InputChangeEventDetail>) => {
     setPassword(String(event.detail.value));
+    if(password.trim()!==''){
+      setisValidPasw(validarCadena(password));
+    }
+   
   };
   const handleConfirmPasswordChange = (event: CustomEvent<InputChangeEventDetail>) => {
     setConfirmPassword(String(event.detail.value));
   };
   const passwordsMatch = password === confirmPassword;
-  
-  data.clave=password;
-  data.Correo=correo;
-
-
 
   const [present] = useIonToast();
-  
   const presentToast = () => {
+    const data: Usuario = {
+      mail:correo ,
+      password: password ,
+    };
+    console.log(`http://localhost:5002/register?mail=${data.mail}&password=${data.password}`);
 
-    fetch('http://localhost:5002/api/Reservas/reservarInstalacion', {
-method: 'POST',
-body: JSON.stringify(data),
-headers: {
-  'Content-Type': 'application/json'
-}
-})
-.then(response => response.json())
-.then(data => {
-console.log('Response:', data);
-if(data.status!==200){
-    present({
-  message: ' algo salio mal  ',
-  duration: 1000,
-  position: 'middle'
-});
-}
-else{
-  present({
-    message: 'Ya estas registrado',
-    duration: 1000,
-    position: 'middle'
-  });
-}
-}) 
+
+    fetch(`http://localhost:5002/register?mail=${data.mail}&password=${data.password}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(response => {
+        if (!response.ok) {
+          present({
+            message: ' algo salio mal  ',
+            duration: 1000,
+            position: 'middle',
+            color: "danger"
+          });
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        present({
+              message: 'Te Registraste correctamente',
+              duration: 1000,
+              position: 'middle',
+              color: "success"
+            });
+            setShowModal(false);
+        console.log(data);
+      })
+      .catch(error => console.error(error));
+
   };
+  
 
   return (
     <>
-      <IonButton onClick={() => setShowModal(true)}>Registrate</IonButton>
+      <p onClick={() => setShowModal(true)} >Registrate! </p>
       <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} >
             <IonToolbar>
               <IonTitle>Ingresa tus datos</IonTitle>
@@ -111,7 +115,6 @@ else{
               <IonButton onClick={() => setShowModal(false)}>Cerrar </IonButton>
               </IonButtons>
             </IonToolbar>
-    
         <div>
         <IonCardContent>
         <p>Ingresa tu Correo Electrónico </p>
@@ -120,7 +123,7 @@ else{
                   className={`${isValid && 'ion-valid'} ${isValid === false && 'ion-invalid'} ${isTouched && 'ion-touched'}`}
                   type="email"    
                   label=""
-                  placeholder="ejemplo@Puce.edu.ec"
+                  placeholder="tucorreo@Puce.edu.ec"
                   errorText="No es un correo de la PUCE"
                   onIonInput={(event) => validate(event)}
                   onIonBlur={() => markTouched()}
@@ -130,7 +133,6 @@ else{
       <IonCardContent>
       <p>Ingresa tu contraseña </p>
         <IonInput    className={`${isValid && 'ion-valid'} ${isValid === false && 'ion-invalid'} ${isTouched && 'ion-touched'}`}
-                  type="password"    
                   label=""
                   placeholder="contraseña"
                   onIonBlur={() => markTouched()}
@@ -141,7 +143,6 @@ else{
       <IonCardContent>
       <p>Repetir contraseña </p>
         <IonInput className={`${isValid && 'ion-valid'} ${isValid === false && 'ion-invalid'} ${isTouched && 'ion-touched'}`}
-                  type="password"    
                   label=""
                   placeholder="contraseña"
                   onIonBlur={() => markTouched()}
@@ -159,9 +160,18 @@ else{
       <IonText color="danger">Las contraseñas no coinciden</IonText>
     </IonCardContent>
   )}
+   {isValidPasw ? (
+    <IonCardContent>
+     
+    </IonCardContent>
+  ) : (
+    <IonCardContent className={ `ion-text-center ion-justify-content-center container` }>
+      <IonText color="danger">Tiene que contener caracteres especiales @#! letras en Mayusculas y minimo 8 caracteres</IonText>
+    </IonCardContent>
+  )}
 </IonCard>   
          
-      <IonButton className="custom-button" expand="block" onClick={() => presentToast()}>Registrar</IonButton>
+      <IonButton color="dark" className="custom-button" expand="block" onClick={() => presentToast()}>Registrar</IonButton>
         </div>
        
       </IonModal>

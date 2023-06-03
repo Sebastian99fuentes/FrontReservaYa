@@ -1,21 +1,18 @@
 
-import {  IonHeader, IonTitle, IonToolbar,IonAvatar, IonFab, IonFabButton, IonIcon, IonFabList } from '@ionic/react';
-import { add } from 'date-fns';
-import { Link } from 'react-router-dom';
+import {  IonHeader, IonTitle, IonToolbar } from '@ionic/react';
+import '../HeaderContainer/HeaderContainer.css';
 
 function HeaderContainer(){
   return (
     <div >
-     <IonHeader>
-        <IonToolbar>
-        <IonTitle>ReservaYa! prueba</IonTitle>
-        <Link to='/user'  slot="end">
+      <IonHeader>
+        <IonToolbar className={ `midtitle` }>
+       <IonTitle className={ `ion-text-center ion-justify-content-center container` }>ReservaYa!</IonTitle>
+        {/* <Link to='/user'  slot="end">
         <IonAvatar>
            <img alt="Silhouette of a person's head" src="https://cdn-icons-png.flaticon.com/512/6522/6522516.png" />
-
           </IonAvatar>
-        </Link>
-      
+        </Link> */}
         </IonToolbar>
       </IonHeader>
     </div>
