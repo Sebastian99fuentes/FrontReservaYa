@@ -64,13 +64,13 @@ const MisReservas: React.FC = () => {
   };
 
   async function deleteData( res: string ) {
-      const response =await axios.delete(`http://localhost:5002/api/Reservas/id?id=${res}`);
+      const response =await axios.delete(`http://localhost:80/api/Reservas/id?id=${res}`);
       console.log(response.data);
      
   } 
   async function fetchData() {
     const userId = localStorage.getItem('userId');
-    const response = await axios.get(`http://localhost:5002/api/Reservas/id?id=${userId}`);
+    const response = await axios.get(`http://localhost:80/api/Reservas/id?id=${userId}`);
     setData(response.data);
     console.log(response.data);
     

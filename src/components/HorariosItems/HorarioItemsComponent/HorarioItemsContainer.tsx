@@ -20,7 +20,7 @@ function HorarioItemsContainer(){
   const miArray: { id: string, desc: string, cant: number }[] =data;
 
   async function fetchData() {
-    const response = await axios.get(`http://localhost:5002/api/Implementos`)
+    const response = await axios.get(`http://localhost:80/api/Implementos`)
     setData(response.data); 
     console.log(palabra); 
   }
@@ -35,29 +35,29 @@ function HorarioItemsContainer(){
  console.log(data);
     if (miArray[0]?.cant) {
       if(palabra==='Futbol'){
-        console.log(miArray[0].cant);
-        cantidad=miArray[0].cant;
-        iditem=miArray[0].id;
-      }
-      if(palabra==='Basket'){
-        console.log(miArray[1].cant);
-        cantidad=miArray[1].cant;
-        iditem=miArray[1].id;
-      }
-      if(palabra==='PinPon'){
-        console.log(miArray[3].cant);
-        cantidad=miArray[3].cant;
-        iditem=miArray[3].id;
-      }
-      if(palabra==='Volley'){
         console.log(miArray[2].cant);
         cantidad=miArray[2].cant;
         iditem=miArray[2].id;
       }
-      if(palabra==='Chalecos'){
+      if(palabra==='Basket'){
         console.log(miArray[4].cant);
         cantidad=miArray[4].cant;
         iditem=miArray[4].id;
+      }
+      if(palabra==='PinPon'){
+        console.log(miArray[1].cant);
+        cantidad=miArray[1].cant;
+        iditem=miArray[1].id;
+      }
+      if(palabra==='Volley'){
+        console.log(miArray[3].cant);
+        cantidad=miArray[3].cant;
+        iditem=miArray[3].id;
+      }
+      if(palabra==='Chalecos'){
+        console.log(miArray[0].cant);
+        cantidad=miArray[0].cant;
+        iditem=miArray[0].id;
       }
       
     } else {

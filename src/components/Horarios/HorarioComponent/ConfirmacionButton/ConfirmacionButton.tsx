@@ -59,7 +59,7 @@ async function revision() {
        
         if(data.dia.trim()!=='' ||data.hora.trim()!==''){
   
-          axios.post(`http://localhost:5002/api/Reservas/reservarInstalacion?dia=${data.dia}&hora=${data.hora}&usuarioID=${data.usuarioID}&tipo=${data.tipo}`, data, {
+          axios.post(`http://localhost:80/api/Reservas/reservarInstalacion?dia=${data.dia}&hora=${data.hora}&usuarioID=${data.usuarioID}&tipo=${data.tipo}`, data, {
             headers: {
               'Content-Type': 'application/json'
             }

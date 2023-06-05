@@ -8,7 +8,7 @@ interface ItemsReserva{
   dia:string  //123123
 }
 const reloadPage = () => {
-  // window.location.reload();
+  window.location.reload();
 };
 
 function ConfirmacionItemsButton(props: any) {
@@ -55,7 +55,7 @@ function ConfirmacionItemsButton(props: any) {
           });
          }
         if(data.dia.trim()!==""){
-          axios.post(`http://localhost:5002/api/Reservas/reservarImplemento`, data, {
+          axios.post(`http://localhost:80/api/Reservas/reservarImplemento`, data, {
             headers: {
               'Content-Type': 'application/json'
             }

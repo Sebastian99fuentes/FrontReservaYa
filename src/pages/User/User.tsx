@@ -99,7 +99,7 @@ if(user!=null){
      newPassword: password
     };
     console.log(data);
-    axios.put(`http://localhost:5002/change`, data, {
+    axios.put(`http://localhost:80/change`, data, {
       headers: {
         'Content-Type': 'application/json'
       }

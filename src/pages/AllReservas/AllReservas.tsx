@@ -27,7 +27,7 @@ const AllReservas: React.FC = () => {
 
   async function fetchData() {
     const userId = localStorage.getItem('userId');
-    const response = await axios.get(`http://localhost:5002/api/Reservas/id?id=${userId}`);
+    const response = await axios.get(`http://localhost:80/api/Reservas/id?id=${userId}`);
     setData(response.data);
     console.log(response.data);
   

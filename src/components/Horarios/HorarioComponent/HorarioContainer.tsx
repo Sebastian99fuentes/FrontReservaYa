@@ -18,7 +18,7 @@ function HorarioContainer(){
   const [data2, setData2] = useState<string[]>([]);
   const [selectedHora, setSelectedHora] = useState<string>('');
   const horas: string[] = [
-    'Sabado',
+   
     'Lunes',
     'Martes',
     'Miércoles',
@@ -45,7 +45,7 @@ function HorarioContainer(){
 
   async function fetchData() {
     if(selectedDay!=='') {
-      const response = await axios.get(`http://localhost:5002/api/Horarios/${palabra}Disponibles?dia=${selectedDay}`)
+      const response = await axios.get(`http://localhost:80/api/Horarios/${palabra}Disponibles?dia=${selectedDay}`)
       setData(response.data); 
       console.log(response.data);
     } 
@@ -73,7 +73,7 @@ function HorarioContainer(){
        });
        const concatenatedHours: string = formattedArray.join(',');
        const numerosArray = concatenatedHours.split(',');
-
+       const numerosOrdenados: number[] = numerosArray.map(Number).sort((a, b) => a - b);
        const datos= { dia:selectedDay, horarita:selectedHora ,Tiporita:rutaActual.substring(9) , IdUsuario:userId };
 
 
@@ -108,7 +108,7 @@ function HorarioContainer(){
           placeholder="Seleccione una hora"
           onIonChange={handleHoraChange}
         >
-          {numerosArray.map((numero) => (
+          {numerosOrdenados.map((numero) => (
             <IonSelectOption key={numero} >
              {numero}
             </IonSelectOption>

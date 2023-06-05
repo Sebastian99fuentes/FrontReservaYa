@@ -46,32 +46,31 @@ const ModalRegistro: React.FC = () => {
   const markTouched = () => {
     setIsTouched(true);
   };
-  function validarCadena(cadena: string): boolean {
-    const regex = /^(?=.*[!@#$%^&*()])(?=.*[A-Z])(?=.*[0-9]).{8,}$/;
-    return regex.test(cadena);
-  }
-  const handlePasswordChange = (event: CustomEvent<InputChangeEventDetail>) => {
-    setPassword(String(event.detail.value));
-    if(password.trim()!==''){
-      setisValidPasw(validarCadena(password));
-    }
-   
+  const validate2 = (ev: Event) => {
+    const value = (ev.target as HTMLInputElement).value;
+    setIsValid(undefined);
+    if (value === '') return;
+    validatePasword(value)  !== null ? setisValidPasw(true) : setisValidPasw(false);
   };
-  const handleConfirmPasswordChange = (event: CustomEvent<InputChangeEventDetail>) => {
-    setConfirmPassword(String(event.detail.value));
+  const validatePasword = (pasword: string) => {
+    setPassword(pasword);
+    return pasword.match(
+      /^(?=.*[!@#$%^&*()])(?=.*[A-Z])(?=.*[0-9]).{8,}$/
+    );
   };
-  const passwordsMatch = password === confirmPassword;
 
+
+  console.log(password.length);
+  console.log(isValidPasw);
   const [present] = useIonToast();
   const presentToast = () => {
     const data: Usuario = {
       mail:correo ,
       password: password ,
     };
-    console.log(`http://localhost:5002/register?mail=${data.mail}&password=${data.password}`);
 
-
-    fetch(`http://localhost:5002/register?mail=${data.mail}&password=${data.password}`, {
+if(isValidPasw===true){
+  fetch(`http://localhost:80/register?mail=${data.mail}&password=${data.password}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -101,13 +100,15 @@ const ModalRegistro: React.FC = () => {
         console.log(data);
       })
       .catch(error => console.error(error));
+}
+  
 
   };
   
 
   return (
     <>
-      <p onClick={() => setShowModal(true)} >Registrate! </p>
+      <p onClick={() => setShowModal(true)} >No tienes cuenta Registrate! </p>
       <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)} >
             <IonToolbar>
               <IonTitle>Ingresa tus datos</IonTitle>
@@ -134,13 +135,15 @@ const ModalRegistro: React.FC = () => {
       <p>Ingresa tu contraseña </p>
         <IonInput    className={`${isValid && 'ion-valid'} ${isValid === false && 'ion-invalid'} ${isTouched && 'ion-touched'}`}
                   label=""
-                  placeholder="contraseña"
+                  placeholder="tu contraseña"
+                  errorText="No es un correo de la PUCE"
+                  onIonInput={(event) => validate2(event)}
                   onIonBlur={() => markTouched()}
-                  onIonChange={handlePasswordChange}
+                  // onIonChange={handlePasswordChange}
                  >
         </IonInput>
       </IonCardContent>
-      <IonCardContent>
+      {/* <IonCardContent>
       <p>Repetir contraseña </p>
         <IonInput className={`${isValid && 'ion-valid'} ${isValid === false && 'ion-invalid'} ${isTouched && 'ion-touched'}`}
                   label=""
@@ -149,24 +152,16 @@ const ModalRegistro: React.FC = () => {
                   onIonChange={handleConfirmPasswordChange}
                  >
         </IonInput>
-      </IonCardContent>  
+      </IonCardContent>   */}
       <IonCard>
-  {passwordsMatch ? (
-    <IonCardContent>
-     
-    </IonCardContent>
-  ) : (
-    <IonCardContent className={ `ion-text-center ion-justify-content-center container` }>
-      <IonText color="danger">Las contraseñas no coinciden</IonText>
-    </IonCardContent>
-  )}
+      <p>Debe de contener caracteres especiales @#! letras en Mayusculas minusculas y minimo 8 caracteres </p>
    {isValidPasw ? (
     <IonCardContent>
      
     </IonCardContent>
   ) : (
     <IonCardContent className={ `ion-text-center ion-justify-content-center container` }>
-      <IonText color="danger">Tiene que contener caracteres especiales @#! letras en Mayusculas y minimo 8 caracteres</IonText>
+      <IonText color="danger">Ingresa una contraseña valida</IonText>
     </IonCardContent>
   )}
 </IonCard>   
