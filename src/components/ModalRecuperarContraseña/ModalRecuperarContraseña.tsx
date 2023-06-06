@@ -22,7 +22,9 @@ const ModaRecuperarContraseña: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [isTouched, setIsTouched] = useState(false);
   const [isValid, setIsValid] = useState<boolean>();
-
+  const [isValidPasw, setisValidPasw] = useState<boolean>(true); 
+  const [password, setPassword] = useState(''); 
+  
   const validateEmail = (email: string) => {
     return email.match(
       /^[a-zA-Z0-9._%+-]+@[pP]uce\.edu\.ec$/
@@ -43,6 +45,18 @@ const ModaRecuperarContraseña: React.FC = () => {
     setIsTouched(true);
   };
 
+  const validate2 = (ev: Event) => {
+    const value = (ev.target as HTMLInputElement).value;
+    setIsValid(undefined);
+    if (value === '') return;
+    validatePasword(value)  !== null ? setisValidPasw(true) : setisValidPasw(false);
+  };
+  const validatePasword = (pasword: string) => {
+    setPassword(pasword);
+    return pasword.match(
+      /^(?=.*[!@#$%^&*()])(?=.*[A-Z])(?=.*[0-9]).{8,}$/
+    );
+  };
 
 
   const [present] = useIonToast();

@@ -1,6 +1,6 @@
 import React ,{ useEffect, useState  }from "react";
 import './User.css';
-import { IonPage,IonContent, IonFooter, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonButton, IonButtons, IonInput, IonModal, IonTitle, IonToolbar, IonCardTitle, InputChangeEventDetail, useIonToast } from "@ionic/react";
+import { IonPage,IonContent, IonFooter, IonItem, IonLabel, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonButton, IonButtons, IonInput, IonModal, IonTitle, IonToolbar, IonCardTitle, InputChangeEventDetail, useIonToast, IonText } from "@ionic/react";
 
 import FooterContainer from "../../components/FooterContainer/FooterContainer";
 
@@ -89,6 +89,24 @@ if(user!=null){
     localStorage.clear();
   };
 
+
+  const [isValidPasw, setisValidPasw] = useState<boolean>(true);
+ 
+  const validate2 = (ev: Event) => {
+    const value = (ev.target as HTMLInputElement).value;
+    setIsValid(undefined);
+    if (value === '') return;
+    validatePasword(value)  !== null ? setisValidPasw(true) : setisValidPasw(false);
+  };
+  const validatePasword = (pasword: string) => {
+    setPassword(pasword);
+    return pasword.match(
+      /^(?=.*[!@#$%^&*()])(?=.*[A-Z])(?=.*[0-9]).{8,}$/
+    );
+  };
+
+
+
   const [present] = useIonToast();
 
   const presentToast = () => {
@@ -99,40 +117,46 @@ if(user!=null){
      newPassword: password
     };
     console.log(data);
-    axios.put(`http://localhost:80/change`, data, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      console.log('Response:', response.status);
-      if (response.status === 200) {
+
+    if(isValidPasw===true){
+      axios.put(`http://localhost:80/change`, data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        console.log('Response:', response.status);
+        if (response.status === 200) {
+          present({
+            message: 'Cambio de contraseña realizado',
+            duration: 1000,
+            position: 'middle',
+            color: "success"
+          });
+        
+        } else {
+          present({
+            message: 'Error al realizar la reserva',
+            duration: 1000,
+            position: 'middle',
+            color: "danger"
+          
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
         present({
-          message: 'Cambio de contraseña realizado',
-          duration: 1000,
-          position: 'middle',
-          color: "success"
-        });
-      
-      } else {
-        present({
-          message: 'Error al realizar la reserva',
+          message: 'Error en la solicitud',
           duration: 1000,
           position: 'middle',
           color: "danger"
-        
         });
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      present({
-        message: 'Error en la solicitud',
-        duration: 1000,
-        position: 'middle',
-        color: "danger"
       });
-    });
+  
+    }
+
+
   };
 
  
@@ -189,12 +213,25 @@ if(user!=null){
                     label=""
                     placeholder="password"
                     errorText="No son los mismos"
+                    onIonInput={(event) => validate2(event)}
                     onIonBlur={() => markTouched()}
                     onIonChange={handlePasswordChange}
                    >
           </IonInput>
+          
         </IonCardContent>
-
+        <IonCard>
+      <p>Debe de contener caracteres especiales @#! letras en Mayusculas minusculas y minimo 8 caracteres </p>
+   {isValidPasw ? (
+    <IonCardContent>
+     
+    </IonCardContent>
+  ) : (
+    <IonCardContent className={ `ion-text-center ion-justify-content-center container` }>
+      <IonText color="danger">Ingresa una contraseña valida</IonText>
+    </IonCardContent>
+  )}
+</IonCard>   
   
         <IonButton  color="dark" className="custom-button" expand="block" onClick={() => presentToast()}  >Cambiar</IonButton>
           </div>
