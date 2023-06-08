@@ -70,7 +70,7 @@ const ModalRegistro: React.FC = () => {
     };
 
 if(isValidPasw===true){
-  fetch(`http://localhost:80/register?mail=${data.mail}&password=${data.password}`, {
+  fetch(`http://172.16.0.135:80 /register?mail=${data.mail}&password=${data.password}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

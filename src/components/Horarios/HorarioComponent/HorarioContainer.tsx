@@ -45,7 +45,7 @@ function HorarioContainer(){
 
   async function fetchData() {
     if(selectedDay!=='') {
-      const response = await axios.get(`http://localhost:80/api/Horarios/${palabra}Disponibles?dia=${selectedDay}`)
+      const response = await axios.get(`http://172.16.0.135:80 /api/Horarios/${palabra}Disponibles?dia=${selectedDay}`)
       setData(response.data); 
       console.log(response.data);
     } 

@@ -1,6 +1,6 @@
 import { format, parseISO } from 'date-fns';
 import  { useState, useEffect  } from 'react';
-import {  IonContent, IonDatetime, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonSelect, IonSelectOption, IonItem, IonList } from '@ionic/react';
+import {  IonContent, IonDatetime, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonSelect, IonSelectOption, IonItem, IonList, IonLabel } from '@ionic/react';
 import axios from 'axios';
 import ConfirmacionButton from '../../Horarios/HorarioComponent/ConfirmacionButton/ConfirmacionButton';
 import ConfirmacionItemsButton from './ConfirmacionItemsButton/ConfItemsButton';
@@ -8,7 +8,14 @@ import ConfirmacionItemsButton from './ConfirmacionItemsButton/ConfItemsButton';
 
 
 function HorarioItemsContainer(){
-
+  const horas: string[] = [
+   
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes'
+  ];
   const rutaActual = window.location.pathname;
   const palabra = rutaActual.substring(9);
   const userId = localStorage.getItem('userId');
@@ -18,9 +25,9 @@ function HorarioItemsContainer(){
   const [data, setData] = useState([]); 
   const [selectedDay, setSelectedDay] = useState<string>('');
   const miArray: { id: string, desc: string, cant: number }[] =data;
-
+  const [data2, setData2] = useState<string[]>([]);
   async function fetchData() {
-    const response = await axios.get(`http://localhost:80/api/Implementos`)
+    const response = await axios.get(`http://172.16.0.135:80 /api/Implementos`)
     setData(response.data); 
     console.log(palabra); 
   }
@@ -28,7 +35,7 @@ function HorarioItemsContainer(){
    useEffect(() => {
     
     fetchData();
-   
+    fetchdays();
   },[]);
 
    function buscarItem() {
@@ -74,6 +81,11 @@ function HorarioItemsContainer(){
         setSelectedDay(event.detail.value);
       };
 
+      async function fetchdays() {
+        const fechaActual = new Date();
+        const diaActual = fechaActual.getDay(); // Obtiene el día actual (0: Domingo, 1: Lunes, etc.)
+         setData2( horas.slice(diaActual-1, horas.indexOf('Viernes') + 1));
+      }
 
   return (
 
@@ -94,7 +106,21 @@ function HorarioItemsContainer(){
     <IonCardTitle>Se encuentra disponible  </IonCardTitle>
     <IonCardSubtitle></IonCardSubtitle>
     <IonList>
-      <IonItem>
+    <IonItem>
+        <IonLabel>Selecciona día:</IonLabel>
+        <IonSelect
+          value={selectedDay}
+          placeholder="Selecciona el día"
+          onIonChange={handleDayChange}
+        >
+          {data2.map((hora) => (
+          <IonSelectOption key={hora} value={hora}>
+            {hora}
+          </IonSelectOption>
+        ))}
+        </IonSelect>
+      </IonItem>
+      {/* <IonItem>
         <IonSelect aria-label="Fruit" interface="action-sheet" placeholder="Selecciona el dia"  value={selectedDay} onIonChange={handleDayChange}>
         <IonSelectOption value="Lunes">Lunes</IonSelectOption>
       <IonSelectOption value="Martes">Martes</IonSelectOption>
@@ -102,7 +128,7 @@ function HorarioItemsContainer(){
       <IonSelectOption value="Jueves">Jueves</IonSelectOption>
       <IonSelectOption value="Viernes">Viernes</IonSelectOption>
         </IonSelect>
-      </IonItem>
+      </IonItem> */}
     </IonList>
 
     </IonCardContent>

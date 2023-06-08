@@ -41,7 +41,8 @@ if(user!=null){
   const [correo, setcorreo] = useState<string>('');
   const [passwordold, setPasswordold] = useState('');
   const [password, setPassword] = useState('');
-
+  const [isValidPasw, setisValidPasw] = useState<boolean>(true);
+ 
 
   const history = useHistory();
 
@@ -75,7 +76,6 @@ if(user!=null){
     setIsTouched(true);
   };
 
-
   const handlePasswordChange = (event: CustomEvent<InputChangeEventDetail>) => {
     setPassword(String(event.detail.value));
   };
@@ -90,8 +90,6 @@ if(user!=null){
   };
 
 
-  const [isValidPasw, setisValidPasw] = useState<boolean>(true);
- 
   const validate2 = (ev: Event) => {
     const value = (ev.target as HTMLInputElement).value;
     setIsValid(undefined);

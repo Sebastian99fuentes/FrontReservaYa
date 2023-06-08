@@ -66,7 +66,7 @@ const LoginPag: React.FC = () => {
     await handPaswordMail();
     try { 
       if(isValid===true && password!==''){
-        const response = await fetch('http://localhost:80/login', {
+        const response = await fetch('http://172.16.0.135:80 /login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

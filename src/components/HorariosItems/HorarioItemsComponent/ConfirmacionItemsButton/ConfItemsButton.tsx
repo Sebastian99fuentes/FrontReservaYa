@@ -55,7 +55,7 @@ function ConfirmacionItemsButton(props: any) {
           });
          }
         if(data.dia.trim()!==""){
-          axios.post(`http://localhost:80/api/Reservas/reservarImplemento`, data, {
+          axios.post(`http://172.16.0.135:80 /api/Reservas/reservarImplemento`, data, {
             headers: {
               'Content-Type': 'application/json'
             }

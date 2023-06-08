@@ -66,7 +66,7 @@ const ModaRecuperarContraseña: React.FC = () => {
 
   const presentToast = () => {
 
-    fetch('http://localhost:80/api/Reservas/reservarInstalacion', {
+    fetch('http://172.16.0.135:80 /api/Reservas/reservarInstalacion', {
 method: 'POST',
 body: JSON.stringify(data),
 headers: {
